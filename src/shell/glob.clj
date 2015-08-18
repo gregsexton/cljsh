@@ -1,0 +1,2 @@
+(ns shell.glob)
+
