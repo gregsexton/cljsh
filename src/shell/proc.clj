@@ -45,6 +45,7 @@
   (apply comp (reverse cmds)))
 
 ;;; TODO: these conflict...
+;;; TODO: implement these redirections
 (defn < [])
 
 (defn << [str] {:out str})
