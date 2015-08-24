@@ -1,10 +1,13 @@
 (ns shell.proc
+  (:refer-clojure :exclude [< >])
   (:require [clojure.java.io :as io]
             [me.raynes.conch.low-level :as conch])
   (:import [java.io InputStream]))
 
 (defprotocol Pipeable
-  (pipe [this out-stream]))
+  (pipe [this out-stream]
+    "Pipe this to the supplied out-stream. This may or may not close
+    the out-stream depending on implementation."))
 
 (extend-type InputStream
   Pipeable
@@ -25,13 +28,20 @@
     ;; TODO: should this close? how would you type and C-d?
     (.close out-stream)))
 
+(defn- join [stream-a stream-b]
+  ;; TODO: need to stream obvs. how to do the buffering here? what do
+  ;; shells normally do?
+  (let [a (when stream-a (slurp stream-a))
+        b (when stream-b (slurp stream-b))]
+    (java.io.ByteArrayInputStream. (.getBytes (str a b)))))
+
 (defn cmd* [program & args]
   (fn this
-    ([] (this {:out nil}))
+    ([] (this {:out nil :err nil}))
     ([input]
      (let [p (apply conch/proc program args)]
        (pipe (:out input) (:in p))
-       p))))
+       (assoc p :err (join (:err input) (:err p)))))))
 
 (defmacro cmd [program & args]
   (letfn [(normalize [arg]
@@ -40,11 +50,10 @@
                   :else arg))]
     `(cmd* (str '~program) ~@(map normalize args))))
 
-;;; TODO: need to join together the error streams, should do this in cmd
 (defn | [& cmds]
   (apply comp (reverse cmds)))
 
-;;; TODO: these conflict...
+;;; TODO: these conflict... really do need to rename and remove exclusions
 ;;; TODO: implement these redirections
 (defn < [])
 

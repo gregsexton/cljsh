@@ -15,7 +15,7 @@
     ws = #'\\s+'
     escapedQuote = '\\\\\\''        (* backslash quote *)
     quoteChar = #'(?!\\\\\\'|\\').' (* anything except escaped quote or a quote *)
-    tchars = #'[a-zA-Z0-9_/\"-]+'"))
+    tchars = #'[a-zA-Z0-9_/~+\"-]+'"))
 
 (defn- simplify [tree] tree)
 
