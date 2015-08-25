@@ -9,7 +9,7 @@
                  [org.clojure/clojure "1.7.0"]
                  [org.clojure/core.async "0.1.346.0-17112a-alpha"]
                  [instaparse "1.4.1"]]
-  :main ^:skip-aot shell.core
+  :main ^:skip-aot shell
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}
              :dev {:dependencies [[midje "1.7.0"]]}})

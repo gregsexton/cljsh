@@ -23,8 +23,8 @@
   (insta/transform
    {:Pipe (fn [cmd & more]
             (if (empty? more)
-              cmd
-              (list* '| cmd more)))
+              (list cmd)
+              (list (list* '| cmd more))))
     :Cmd (fn [program & args]
            (list* 'cmd program args))
     :Program identity
