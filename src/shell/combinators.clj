@@ -4,6 +4,10 @@
              [string :as str]]
             [shell.streams :as streams]))
 
+;;; TODO: combinators should allow enabling/disabling :out :err
+
+;;; all combinators take a proc map and give back something allowing combining
+
 (defn lines
   ([result] (lines result :out))
   ([result channel-selector]
@@ -12,4 +16,5 @@
 
 (defn print [result]
   (-> (streams/join (:out result) (:err result))
-      streams/print))
+      streams/print)
+  result)

@@ -14,10 +14,11 @@
 (defn- result-map? [res]
   (and (map? res) (contains? res :out)))    ;TODO: use prismatic schema
 
+(defn job [cmd]
+  (print (cmd)))
+
 (defn eval [form]
-  (let [res (clojure.core/eval form)]
-    (if (result-map? res) res
-        {:out (byte-streams/convert (str res) java.io.InputStream)})))
+  (clojure.core/eval form))
 
 (defn repl-read [request-prompt request-exit]
   (let [input (.readLine *in*)]
