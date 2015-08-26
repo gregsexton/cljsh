@@ -14,7 +14,12 @@
    ;; TODO: lazy streaming seq. slurp gobbles everything
    (-> result channel-selector slurp (str/split #"\n"))))
 
-(defn print [result]
-  (-> (streams/join (:out result) (:err result))
-      streams/print)
-  result)
+;;; TODO: break out the join? -- need to be able to interleave in different ways
+(defn print
+  ([result] (print result :out :err))
+  ([result & channel-selectors]
+   (-> (apply streams/join
+              (map (fn [selector] (selector result))
+                   channel-selectors))
+       streams/print)
+   result))

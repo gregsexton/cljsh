@@ -31,7 +31,7 @@
     (println result)))
 
 (defn prompt []
-  (printf "%s (%s)\n$ " (System/getProperty "user.dir") (ns-name *ns*)))
+  (printf "%s (%s)\n$ " @cwd (ns-name *ns*)))
 
 (defn repl* [input] ((comp repl-print eval read) input))
 

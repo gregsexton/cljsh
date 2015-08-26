@@ -2,6 +2,7 @@
   (:refer-clojure :exclude [print])
   (:require [byte-streams :as streams]))
 
+;;; TODO: needs to join 0-many streams. should optionally take a join strategy?
 (defn join [stream-a stream-b]
   ;; TODO: need to stream obvs. how to do the buffering here? what do
   ;; shells normally do?
