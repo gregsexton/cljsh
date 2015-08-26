@@ -1,8 +1,9 @@
 (ns shell.proc
   (:refer-clojure :exclude [< >])
   (:require [clojure.java.io :as io]
-            [me.raynes.conch.low-level :as conch])
-  (:import [java.io InputStream]))
+            [me.raynes.conch.low-level :as conch]
+            [shell.streams :as streams])
+  (:import java.io.InputStream))
 
 (defprotocol Pipeable
   (pipe [this out-stream]
@@ -28,20 +29,13 @@
     ;; TODO: should this close? how would you type and C-d?
     (.close out-stream)))
 
-(defn- join [stream-a stream-b]
-  ;; TODO: need to stream obvs. how to do the buffering here? what do
-  ;; shells normally do?
-  (let [a (when stream-a (slurp stream-a))
-        b (when stream-b (slurp stream-b))]
-    (java.io.ByteArrayInputStream. (.getBytes (str a b)))))
-
 (defn cmd* [program & args]
   (fn this
     ([] (this {:out nil :err nil}))
     ([input]
      (let [p (apply conch/proc program args)]
        (pipe (:out input) (:in p))
-       (assoc p :err (join (:err input) (:err p)))))))
+       (assoc p :err (streams/join (:err input) (:err p)))))))
 
 (defmacro cmd [program & args]
   (letfn [(normalize [arg]
