@@ -15,7 +15,9 @@
   (and (map? res) (contains? res :out)))    ;TODO: use prismatic schema
 
 (defn job [cmd]
-  (print (cmd)))
+  (-> (cmd)
+      print
+      (assoc :run-as-job true)))
 
 (defn eval [form]
   (clojure.core/eval form))
@@ -27,7 +29,8 @@
       (read input))))
 
 (defn repl-print [result]
-  (when-not (result-map? result)
+  ;; do not want to continually print out the result of regular jobs
+  (when-not (and (result-map? result) (:run-as-job result))
     (println result)))
 
 (defn prompt []
