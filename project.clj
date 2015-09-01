@@ -6,6 +6,7 @@
   :dependencies [[byte-streams "0.2.0"]
                  [instaparse "1.4.1"]
                  [me.raynes/conch "0.8.0"]
+                 [me.raynes/fs "1.4.6"]
                  [org.clojure/clojure "1.7.0"]
                  [org.clojure/core.async "0.1.346.0-17112a-alpha"]
                  [instaparse "1.4.1"]]
