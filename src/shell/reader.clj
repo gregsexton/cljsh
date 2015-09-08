@@ -1,8 +1,6 @@
 (ns shell.reader
   (:refer-clojure :exclude [read])
-  (:require [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [instaparse.core :as insta]))
+  (:require [instaparse.core :as insta]))
 
 (def ^:private parser
   (insta/parser

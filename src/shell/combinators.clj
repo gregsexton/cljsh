@@ -8,6 +8,8 @@
 
 ;;; all combinators take a proc map and give back something allowing combining
 
+;; TODO: document signatures of combinators in docstrings
+
 (defn lines
   ([result] (lines result :out))
   ([result channel-selector]

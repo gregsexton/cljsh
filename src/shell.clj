@@ -29,7 +29,7 @@
       (read input))))
 
 (defn repl-print [result]
-  ;; do not want to continually print out the result of regular jobs
+  ;; do not want to print out the process map of regular jobs
   (when-not (and (result-map? result) (:run-as-job result))
     (println result)))
 
