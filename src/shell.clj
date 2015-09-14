@@ -1,5 +1,4 @@
 (ns shell
-  (:gen-class)
   (:refer-clojure :exclude [print read eval > <])
   (:require [byte-streams :as byte-streams]
             [clojure.main :as main]
@@ -14,17 +13,19 @@
 (defn- result-map? [res]
   (and (map? res) (contains? res :out)))    ;TODO: use prismatic schema
 
-(defn job [cmd]
-  (-> (cmd)
-      print
-      (assoc :run-as-job true)))
+(defn run-job
+  ([cmd] (run-job truncated-print cmd))
+  ([printer cmd]
+   (-> (cmd)
+       printer
+       (assoc :run-as-job true))))
 
 (defn eval [form]
   (clojure.core/eval form))
 
 (defn repl-read [request-prompt request-exit]
   (let [input (.readLine *in*)]
-    (if (= input ":quit")
+    (if (= input ":quit")               ;TODO: should allow trailing whitespace
       request-exit
       (read input))))
 
@@ -36,7 +37,7 @@
 (defn prompt []
   (printf "%s (%s)\n$ " @cwd (ns-name *ns*)))
 
-(defn repl* [input] ((comp repl-print eval read) input))
+(defn repl* [input] ((comp eval read) input))
 
 (defn repl []
   (main/repl :read repl-read
