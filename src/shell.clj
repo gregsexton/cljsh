@@ -6,14 +6,14 @@
             [shell.reader :refer :all]
             [shell.combinators :refer :all]))
 
-;;; TODO: setup a system with reloaded repl?
-
+;;; TODO: setup a system with reloaded repl? shell config should be in the system
 ;;; TODO: how to make interactive programs like top work?
 
 (defn- result-map? [res]
   (and (map? res) (contains? res :out)))    ;TODO: use prismatic schema
 
 (defn run-job
+  ;; TODO: make default combinator (in this case truncated-print) configurable
   ([cmd] (run-job truncated-print cmd))
   ([printer cmd]
    (-> (cmd)
