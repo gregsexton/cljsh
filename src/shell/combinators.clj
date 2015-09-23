@@ -12,11 +12,19 @@
 ;;; get blocked on stderr not being consumed. need to be able to
 ;;; stream the lines for lazy processing but also close out the
 ;;; stream..
+
+;;; TODO: need to think through how to handle stdout and stderr
+;;; separately. need a higher order combinator to then provide a
+;;; single combinator for the two approaches.
+
 (defn lines
   ([result] (lines result :out))
   ([result channel-selector]
    ;; TODO: reify seq and close out stream
    (-> result channel-selector streams/stream->lines)))
+
+;;; TODO: are printers really combinators? how do I envision this
+;;; working with run-job?
 
 (defn- println-to [channel & args]
   (binding [*out* channel]
