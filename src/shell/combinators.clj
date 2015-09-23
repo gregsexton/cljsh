@@ -14,12 +14,16 @@
    ;; TODO: reify seq and close out stream
    (-> result channel-selector streams/stream->lines)))
 
+(defn- println-to [channel & args]
+  (binding [*out* channel]
+    (apply println args)))
+
 (defn- run-async-printer [lines output]
   (let [lines-ch (async/chan)
         control (async/onto-chan lines-ch lines)]
     (async/go-loop [line (async/<! lines-ch)]
       (when line
-        (binding [*out* output] (println line))
+        (println-to output line)
         (recur (async/<! lines-ch))))
     control))
 
@@ -35,7 +39,6 @@
           result
           (finally (streams/close! out err))))))
 
-;; TODO: this is broken
 (defn truncated-print
   ([result] (truncated-print result :out :err))
   ([result stdout-selector stderr-selector]
@@ -51,13 +54,12 @@
         (async/go-loop [cnt 0 cs [out-ch err-ch]]
           (when (and (pos? (count cs)) (< cnt max-lines))
             (let [[v c] (async/alts! cs)]
-              (if v
-                (do (println v)
-                    (recur (inc cnt) cs))
-                (recur cnt (filter #{c} cs)))))))
+              (if-not v
+                (recur cnt (filterv #(not= c %) cs))
+                (do (println-to (if (= c out-ch) *out* *err*) v)
+                    (recur (inc cnt) cs)))))))
        (when (or (and out (not (neg? (.read out))))
                  (and err (not (neg? (.read err)))))
-         (binding [*out* *err*]
-           (println "\n-- Output truncated after" max-lines "lines --")))
+         (println-to *err* "\n-- Output truncated after" max-lines "lines --"))
        result
        (finally (streams/close! out err))))))
