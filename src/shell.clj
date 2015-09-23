@@ -44,6 +44,7 @@
              :eval eval
              :print repl-print
              :prompt prompt
+             :init (fn [] (ns shell))
              ;; :caught caught      ;TODO:
              ))
 
