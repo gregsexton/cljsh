@@ -8,6 +8,10 @@
 
 ;; TODO: document signatures of combinators in docstrings
 
+;;; TODO: this needs to be thought through. if we ask for stdout could
+;;; get blocked on stderr not being consumed. need to be able to
+;;; stream the lines for lazy processing but also close out the
+;;; stream..
 (defn lines
   ([result] (lines result :out))
   ([result channel-selector]
