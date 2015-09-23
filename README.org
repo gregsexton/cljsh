@@ -1,0 +1,10 @@
+#+TITLE: Cljsh
+
+This is an experiment in creating a Clojure library for process
+scripting. We also include a Clojure REPL with a coercing reader. This
+reader translates a small bash/zsh-like language to Clojure to allow
+for a convenient shell-replacement.
+
+Project maturity: very immature. I don't even use this on a full-time
+basis yet. Many things are not implemented yet. There are also some
+very cool features to come.
